@@ -1,0 +1,43 @@
+services:
+  backend:
+    env_file: .env
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - albumdle
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    networks:
+      - albumdle
+  postgres:
+    env_file: .env
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+      POSTGRES_DB: ${POSTGRES_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_NAME} -d ${POSTGRES_NAME}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks:
+      - albumdle
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
+
+networks:
+  albumdle:
