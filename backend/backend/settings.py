@@ -25,12 +25,16 @@ SECRET_KEY = os.environ["DJANGO_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '172.21.0.3',
+    '172.21.0.4'
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'albumdle',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
